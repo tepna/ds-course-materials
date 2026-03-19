@@ -46,7 +46,7 @@ Replace `<repo_url>` with the actual URL of your repository.
 Change into the project directory:
 
 ```bash
-cd ds_playground
+cd ds-course-materials
 ```
 
 ### 3. Install Dependencies
