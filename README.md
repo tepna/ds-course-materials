@@ -3,63 +3,211 @@
 
 
 ## How to Get Started?  
-
-- Install Python & Jupyter Notebook (`pip install jupyter` & `jupyter notebook`)
-- Use Poetry (For Dependency Management)
-- Use Conda (For Managing Python & Libraries)
 - No Installation Needed: Google Colab (For Cloud-Based Learning) [Google Colab](https://colab.research.google.com/)
+- Install VS Code → install Python → install Poetry → install Git → clone repository → connect Poetry to Python → open in VS Code.
 
-## SSH Key Setup in Visual Studio Code
+### Project Setup on Windows
 
-### 1. Open VS Code → Terminal
-### 2. Generate SSH key:
-   ```bash
-   ssh-keygen -t ed25519 -C "your_email@example.com"
+This guide explains how to set up the project on **Windows** with:
+
+- **Visual Studio Code**
+- **Python 3.13.2**
+- **pyenv-win**
+- **Poetry**
+- **Git**
+
+### 1. Install Visual Studio Code
+
+Download and install [Visual Studio Code](https://code.visualstudio.com/docs?dv=win).
+
+After installation, open VS Code and install the following extensions:
+
+- **Python** (by Microsoft)
+- **Pylance** (by Microsoft)
+
+### 2. Install `pyenv-win`
+
+Open **PowerShell** and run:
+
+```powershell
+Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
 ````
-### 3. Start agent & add key:
-   ```bash
-   eval "$(ssh-agent -s)"
-   ssh-add ~/.ssh/id_ed25519
+
+Close and reopen PowerShell, then check:
+
+```powershell
+pyenv --version
 ```
-### 4. Copy key:
 
-   ```bash
-   cat ~/.ssh/id_ed25519.pub
-   ```
-### 5. Add it to [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+### 3. Install Python 3.13.2
 
+Install the required Python version:
 
-## Installation Instructions
+```powershell
+pyenv install 3.13.2
+pyenv global 3.13.2
+```
 
-### 1. Clone the Repository
+Verify the installation:
 
-Clone this repository using:
+```powershell
+python --version
+python -c "import sys; print(sys.executable)"
+```
 
-```bash
+Expected output:
+
+```text
+Python 3.13.2
+```
+
+### 4. Install Poetry
+
+Run the following command in **PowerShell**:
+
+```powershell
+(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+```
+
+Check that Poetry is installed:
+
+```powershell
+poetry --version
+```
+
+### 5. Install Git
+
+Install [Git for Windows](https://git-scm.com/install/windows) with:
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+Verify the installation:
+
+```powershell
+git --version
+```
+
+Configure your Git identity once:
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+### 6. SSH Key Setup for GitHub
+
+Generate a new SSH key:
+
+```powershell
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+When prompted for the file location, press **Enter** to use the default path.
+
+Then add your key:
+
+```powershell
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+```powershell
+ssh-add $env:USERPROFILE\.ssh\id_ed25519
+```
+
+Show the public key and copy it:
+
+```powershell
+Get-Content $env:USERPROFILE\.ssh\id_ed25519.pub
+```
+
+Add the copied public key to your [GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) account.
+
+### 7. Clone the Repository
+
+Go to the folder where you want to store the project and clone it.
+
+### HTTPS
+
+```powershell
+cd C:\Users\YourName\source\repos
 git clone <repo_url>
-```
-
-Replace `<repo_url>` with the actual URL of your repository.
-
-### 2. Navigate to the Project Directory
-
-Change into the project directory:
-
-```bash
 cd ds-course-materials
 ```
 
-### 3. Install Dependencies
+### SSH
 
-Inside the project directory, install all dependencies using Poetry:
+```powershell
+cd C:\Users\YourName\source\repos
+git clone git@github.com:OWNER/REPOSITORY.git
+cd ds-course-materials
+```
 
-```bash
+Replace `<repo_url>` or the SSH URL with the actual repository URL.
+
+### 8. Configure the Project Python Version
+
+Inside the repository, set the local Python version:
+
+```powershell
+pyenv local 3.13.2
+python --version
+```
+
+### 9. Create the Poetry Environment
+
+Configure Poetry to create the virtual environment inside the project folder:
+
+```powershell
+poetry config virtualenvs.in-project true --local
+```
+
+Create the environment with Python 3.13.2 and install dependencies:
+
+```powershell
+poetry env use 3.13.2
 poetry install
 ```
 
-This command will read your `pyproject.toml` file, create a virtual environment (if one doesn't exist), and install the required packages.
+If needed, you can also point Poetry to a specific Python executable:
 
-### 4. Running Your Notebooks
+```powershell
+poetry env use "$env:USERPROFILE\.pyenv\pyenv-win\versions\3.13.2\python.exe"
+poetry install
+```
+
+### 10. Open the Project in VS Code
+
+From the repository folder, run:
+
+```powershell
+code .
+```
+
+In VS Code:
+
+1. Press `Ctrl + Shift + P`
+2. Search for **Python: Select Interpreter**
+3. Choose the interpreter from:
+
+```text
+ds-course-materials\.venv\Scripts\python.exe
+```
+
+### 11. Verify the Setup
+
+Run the following commands inside the project:
+
+```powershell
+python --version
+poetry --version
+poetry env info
+poetry run python --version
+```
+
+## Running Your Notebooks
 
 If your project includes Jupyter notebooks, you can start Jupyter Lab using Poetry. Make sure you've installed all project dependencies and then run:
 
